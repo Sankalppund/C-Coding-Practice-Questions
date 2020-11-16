@@ -3,8 +3,10 @@
 #include <stdint.h> //for unit32_t data type.
 #include <math.h>   //for log function
 #include <stdbool.h>
+#include <string.h>
 
 //Get number of set bits in an integer number also called as HammingWeight.
+//O(logn): since loop iterates only number of set bits times.
 uint32_t getsetBits(uint32_t num){
    
     uint32_t count=0;
@@ -209,10 +211,76 @@ void checkParity(uint32_t num){
     }
 }
 
+//reversebits
+//select rightmost bit using & 1
+//shift that bit to (31-kth) position
+//i.e. 0th will shift to 31st position
+//1st will shift to 30th position
+//Accumulate the result in 32 bit integer 
+//O(1):since number of iteration is fixed. 
+
+uint32_t reversebits(uint32_t num){
+    
+    uint32_t reverse=0, power = 31;//for 32 bit system
+    
+    //power = sizeof(num)*(8) // for unknown system
+    
+    while(num){
+        
+        //select rightmost bit abd shift to 31-kth pos.
+        reverse += (num&1)<<power;
+        
+        //iterate through all 
+        //bits from left to right.
+        num=num>>1;
+        
+        power--;
+    }
+    
+    return reverse;
+}
+
+//leading number of zeros
+//get the MSB position and 
+//subtract it from 31 in 32 bit system
+uint32_t getLeadingZeros(uint32_t num){
+    
+    uint32_t count=0;
+    
+    uint32_t power = sizeof(num)*8;
+    
+    //get leftmost msb position
+    while(num=num>>1){
+        count++;
+    }
+    return (power-count-1);
+}
+
+//Rotatebits in left direction
+uint32_t rotateBitsLeft(uint32_t num, uint32_t pos){
+    
+    uint32_t numBits = sizeof(num)*8;
+    
+    return (num<<pos)|(num>>(numBits-pos));
+    
+}
+
+//Rotate Bits in right direction
+uint32_t rotateBitsRight(uint32_t num, uint32_t pos){
+    
+    uint32_t numBits = sizeof(num)*8;
+    
+    return (num>>pos)|(num<<(numBits-pos));
+    
+}
+
 //main function
 int main(void){
     
-    checkParity(31);
+    printf("%d\n",rotateBitsLeft(3,3));
 
-  return 0;  
+    return 0;  
 }
+
+
+
